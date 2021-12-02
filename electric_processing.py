@@ -12,12 +12,18 @@ def data_processing():
     df = pd.read_csv(i, names=colnames, sep=";")
     phi_radian = (df['-φ'] * pi * -1) / 180   # Transform phase angle into radian
     # Calculation of the corresponding electrophysical values.
-    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Real part of impedance Z
-    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Imaginary part of impedance Z
+    df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of impedance Z
+    df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of impedance
+    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of impedance Z
+    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of impedance Z
     df['logf'] = np.log(df['f'])  # lg of frequency
     df['ω'] = 2 * pi * df['f']  # circular frequency
-    df['Cu'] = df["Z\", Om·cm"] / (df['ω'] * ((df['Z\', Om·cm']))**2 + (df["Z\", Om·cm"])**2)  # real capacity
+    df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\'']))**2 + (df["Z\""])**2)  # real capacity
     df['φ'] = df['-φ'] * -1  # Positive phase angle
+    df['σspec, Sm/cm'] = (df["Z\""] * h * 0.01) / (s * ((df['Z\'']))**2 + (df["Z\""])**2) # Specific conductiviy in Sm/cm
+    df['ε\''] = df['Cu'] / c_0  # real part od dielectric constant
+    df['ε\"'] =  /(df['ω'] * c_0)  # imaginary part od dielectric constant
+
 
 
 
@@ -37,6 +43,8 @@ h = float(input("Enter the thikness of the sample in mm "))/1000
 d = float(input("Enter the diameter of the sample in mm "))/1000
 # Calculate the surface area of the sample in m^2
 s = (pi * d * d) / 4
+# Calculate vacuum capacity
+c_0 = ((8.854*(10**-12))*h)/ s
 
 # Check if you have already run the program and got the files.
 current_dir = os.getcwd()
