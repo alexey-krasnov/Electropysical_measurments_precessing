@@ -20,11 +20,15 @@ def data_processing():
     df['ω'] = 2 * pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\'']))**2 + (df["Z\""])**2)  # real capacity
     df['φ'] = df['-φ'] * -1  # Positive phase angle
-    df['σspec, Sm/cm'] = (df["Z\""] * h * 0.01) / (s * ((df['Z\'']))**2 + (df["Z\""])**2) # Specific conductiviy in Sm/cm
-    df['ε\''] = df['Cu'] / c_0  # real part od dielectric constant
-    df['ε\"'] =  /(df['ω'] * c_0)  # imaginary part od dielectric constant
-
-
+    df['σu'] = df["Z\""] / ((df['Z\'']))**2 + (df["Z\""])**2  # Conductiviy
+    df['σspec, Sm/cm'] = (df['σu'] * h * 0.01) / s  # Specific conductiviy in Sm/cm
+    df['ε\''] = df['Cu'] / c_0  # real part of dielectric constant
+    df['ε\"'] = df['σu'] /(df['ω'] * c_0)  # imaginary part od dielectric constant
+    df['β\''] = 1 / df['ε\'']
+    df['β\"'] = 1 / df['ε\"']
+    df['tanδ'] = df['ε\"'] / df['ε\'']  # dielectric loss tangent
+    df['M\''] = df['ω'] * c_0 * df["Z\""]  # real part of electric modulus
+    df['M\"'] = df['ω'] * c_0 * df['Z\'']  # imaginary part of electric modulus
 
 
 def export_data_excel():
