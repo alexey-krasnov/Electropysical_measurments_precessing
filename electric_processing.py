@@ -12,8 +12,13 @@ def data_processing():
     df = pd.read_csv(i, names=colnames, sep=";")
     phi_radian = (df['-φ'] * pi * -1) / 180   # Transform phase angle into radian
     # Calculation of the corresponding electrophysical values.
-    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h
-    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h
+    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Real part of impedance Z
+    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Imaginary part of impedance Z
+    df['logf'] = np.log(df['f'])  # lg of frequency
+    df['ω'] = 2 * pi * df['f']  # circular frequency
+    df['Cu'] = df["Z\", Om·cm"] / (df['ω'] * ((df['Z\', Om·cm']))**2 + (df["Z\", Om·cm"])**2)  # real capacity
+    df['φ'] = df['-φ'] * -1  # Positive phase angle
+
 
 
 def export_data_excel():
@@ -46,6 +51,5 @@ finally:
             data_processing()
             export_data_excel()
             export_data_zview()
-
 
 print("Processing of your absorption data is finished successfully!")
