@@ -16,15 +16,15 @@ def data_processing():
     df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h
 
 
+def export_data_excel():
+    """Create one excel file and store the electrophysical values at one temperature as the corresponding sheet."""
+    df.to_excel(writer, sheet_name=f'{i}', index=False)
+
+
 def export_data_zview():
     """Make a directory ans export data as txt files for Zview processing. The format of txt file is f, Z', -Z". """
     df["-Z\", Om·cm"] = df["Z\", Om·cm"] * (-1)
     df.to_csv(f'{outdir}/{i}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
-
-
-def export_data_excel():
-    """Create one excel file and store the electrophysical values at one temperature as the corresponding sheet."""
-    df.to_excel(writer, sheet_name=f'{i}', index=False)
 
 
 # Get the thikness and diameter of the sample in mm, transform them in m
@@ -44,7 +44,8 @@ finally:
     with pd.ExcelWriter(f'out.xlsx') as writer:
         for i in glob.glob('*.txt'):
             data_processing()
-            export_data_zview()
             export_data_excel()
+            export_data_zview()
+
 
 print("Processing of your absorption data is finished successfully!")
