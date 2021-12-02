@@ -62,7 +62,7 @@ def export_data_zview():
     df.to_csv(f'{outdir}/{i}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
-current_dir = os.path.basename(os.getcwd())  # Get name of current directiry
+current_dir = os.path.basename(os.getcwd())  # Get name of current directory
 outdir = 'Zview_files'  # Directory for Zview out files
 # Check if you have already run the program and got the files.
 if f'{current_dir}.xlsx' and outdir in glob.glob('*'):
