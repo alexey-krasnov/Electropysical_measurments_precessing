@@ -33,7 +33,8 @@ def data_processing():
 
 def export_data_excel():
     """Create one excel file and store the electrophysical values at one temperature as the corresponding sheet."""
-    df.to_excel(writer, sheet_name=f'{i}', index=False)
+    df.to_excel(writer, sheet_name=f'{i}', index=False, columns=['f', 'Z\', Om·cm', "-Z\", Om·cm", 'logf',
+   'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'ε\'','ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
 
 def export_data_zview():
