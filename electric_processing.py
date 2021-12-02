@@ -5,6 +5,24 @@ import numpy as np
 import os
 
 
+def get_user_input():
+    global h, d, s, c_0
+    """Get the thickness and diameter of the sample from user. Calculate surface area and vacuum capacity"""
+    # Get the thickness and diameter of the sample in mm, transform them in m
+    while True:
+        try:
+            h = float(input("Enter the thickness of the sample in mm: ")) / 1000
+            d = float(input("Enter the diameter of the sample in mm: ")) / 1000
+        except ValueError:
+            print("The values should be only digits, e.g. 1.2 and 13.5.")
+        else:
+            # Calculate the surface area of the sample in m^2
+            s = (pi * d * d) / 4
+            # Calculate vacuum capacity
+            c_0 = ((8.854 * (10 ** -12)) * s) / h
+            break
+
+
 def data_processing():
     """Read data from the raw csv files in the current directory, processing, and writing data in the DataFrame."""
     global df
@@ -43,26 +61,32 @@ def export_data_zview():
     df.to_csv(f'{outdir}/{i}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
-# Get the thickness and diameter of the sample in mm, transform them in m
-h = float(input("Enter the thickness of the sample in mm "))/1000
-d = float(input("Enter the diameter of the sample in mm "))/1000
-# Calculate the surface area of the sample in m^2
-s = (pi * d * d) / 4
-# Calculate vacuum capacity
-c_0 = ((8.854*(10**-12)) * s) / h
-
+current_dir = os.path.basename(os.getcwd())  # Get name of current directiry
+outdir = 'Zview_files'  # Directory for Zview out files
 # Check if you have already run the program and got the files.
-current_dir = os.getcwd()
-outdir = 'Zview_files'
-try:
-    os.mkdir(outdir)
-except FileExistsError:
+if f'{current_dir}.xlsx' and outdir in glob.glob('*'):
     print("You have already generated necessary files.")
-finally:
-    with pd.ExcelWriter(f'out.xlsx') as writer:
+else:
+    get_user_input()
+    os.mkdir(outdir)
+    with pd.ExcelWriter(f'{current_dir}.xlsx') as writer:
         for i in glob.glob('*.txt'):
             data_processing()
             export_data_excel()
             export_data_zview()
-print("Processing of your absorption data is finished successfully!")
+    print("Processing of your absorption data is finished successfully!")
+
+# outdir = 'Zview_files'
+# try:
+#     os.mkdir(outdir)
+# except FileExistsError:
+#     print("You have already generated necessary files.")
+# finally:
+#     with pd.ExcelWriter(f'out.xlsx') as writer:
+#         for i in glob.glob('*.txt'):
+#             data_processing()
+#             export_data_excel()
+#             export_data_zview()
+#
+# print("Processing of your absorption data is finished successfully!")
 
