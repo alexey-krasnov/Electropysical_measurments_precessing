@@ -71,7 +71,7 @@ else:
     get_user_input()
     os.mkdir(outdir)
     with pd.ExcelWriter(f'{current_dir}.xlsx') as writer:
-        for i in glob.glob('*.txt'):
+        for i in sorted(glob.glob('*.txt')):
             data_processing()
             export_data_excel()
             export_data_zview()
