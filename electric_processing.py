@@ -49,7 +49,7 @@ d = float(input("Enter the diameter of the sample in mm "))/1000
 # Calculate the surface area of the sample in m^2
 s = (pi * d * d) / 4
 # Calculate vacuum capacity
-c_0 = ((8.854*(10**-12))*h) / s
+c_0 = ((8.854*(10**-12)) * s) / h
 
 # Check if you have already run the program and got the files.
 current_dir = os.getcwd()
@@ -66,3 +66,4 @@ finally:
             export_data_zview()
 
 print("Processing of your absorption data is finished successfully!")
+print(c_0)
