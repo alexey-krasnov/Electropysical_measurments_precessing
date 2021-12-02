@@ -19,7 +19,7 @@ def data_processing():
     df['logf'] = np.log10(df['f'])  # lg of frequency
     df['ω'] = 2 * pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2))  # real capacity
-    df['φ'] = df['-φ'] * -1  # Positive phase angle
+    df['φ'] = df['-φ'] * (-1)  # Positive phase angle
     df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductivity
     df['σspec, Sm/cm'] = (df['σu'] * h * 0.01) / s  # Specific conductivity in Sm/cm
     df['ε\''] = df['Cu'] / c_0  # real part of dielectric constant
