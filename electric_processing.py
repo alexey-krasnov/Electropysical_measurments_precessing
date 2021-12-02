@@ -70,21 +70,9 @@ if f'{current_dir}.xlsx' and outdir in glob.glob('*'):
 else:
     get_user_input()
     os.mkdir(outdir)
-    with pd.ExcelWriter(f'{current_dir}.xlsx') as writer:
+    with pd.ExcelWriter(f'{current_dir}_h={h}_d={d}.xlsx') as writer:
         for i in sorted(glob.glob('*.txt')):
             data_processing()
             export_data_excel()
             export_data_zview()
     print("Processing of your absorption data is finished successfully!")
-
-# outdir = 'Zview_files'
-# try:
-#     os.mkdir(outdir)
-# except FileExistsError:
-#     print("You have already generated necessary files.")
-# finally:
-#     with pd.ExcelWriter(f'out.xlsx') as writer:
-#         for i in glob.glob('*.txt'):
-#             data_processing()
-#             export_data_excel()
-#             export_data_zview()
