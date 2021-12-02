@@ -16,14 +16,14 @@ def data_processing():
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of impedance
     df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of impedance Z
     df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of impedance Z
-    df['logf'] = np.log(df['f'])  # lg of frequency
+    df['logf'] = np.log10(df['f'])  # lg of frequency
     df['ω'] = 2 * pi * df['f']  # circular frequency
-    df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\'']))**2 + (df["Z\""])**2)  # real capacity
+    df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2)) # real capacity
     df['φ'] = df['-φ'] * -1  # Positive phase angle
-    df['σu'] = df["Z\""] / ((df['Z\'']))**2 + (df["Z\""])**2  # Conductiviy
+    df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductiviy
     df['σspec, Sm/cm'] = (df['σu'] * h * 0.01) / s  # Specific conductiviy in Sm/cm
     df['ε\''] = df['Cu'] / c_0  # real part of dielectric constant
-    df['ε\"'] = df['σu'] /(df['ω'] * c_0)  # imaginary part od dielectric constant
+    df['ε\"'] = df['σu'] / (df['ω'] * c_0)  # imaginary part od dielectric constant
     df['β\''] = 1 / df['ε\'']
     df['β\"'] = 1 / df['ε\"']
     df['tanδ'] = df['ε\"'] / df['ε\'']  # dielectric loss tangent
@@ -33,8 +33,8 @@ def data_processing():
 
 def export_data_excel():
     """Create one excel file and store the electrophysical values at one temperature as the corresponding sheet."""
-    df.to_excel(writer, sheet_name=f'{i}', index=False, columns=['f', 'Z\', Om·cm', "-Z\", Om·cm", 'logf',
-   'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'ε\'','ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
+    df.to_excel(writer, sheet_name=f'{i}', index=False, columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf',
+    'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
 
 def export_data_zview():
@@ -49,7 +49,7 @@ d = float(input("Enter the diameter of the sample in mm "))/1000
 # Calculate the surface area of the sample in m^2
 s = (pi * d * d) / 4
 # Calculate vacuum capacity
-c_0 = ((8.854*(10**-12))*h)/ s
+c_0 = ((8.854*(10**-12))*h) / s
 
 # Check if you have already run the program and got the files.
 current_dir = os.getcwd()
