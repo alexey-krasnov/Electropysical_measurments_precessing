@@ -15,7 +15,6 @@ def data_processing():
     df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h
     df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h
 
-    # print(i, df)
 
 def export_data_zview():
     """Make a directory ans export data as txt files for Zview processing. The format of txt file is f, Z', -Z". """
@@ -25,13 +24,7 @@ def export_data_zview():
 
 def export_data_excel():
     """Create one excel file and store the electrophysical values at one temperature as the corresponding sheet."""
-    with pd.ExcelWriter('out.xlsx') as writer:
-        df.to_excel(writer, sheet_name=i, index=False)
-    # with pd.ExcelWriter(f'{current_dir}' + '.xlsx') as writer:
-    #     df.to_excel(writer, sheet_name=i.replace('.txt', ''), index=False)
-
-
-    # df.to_excel(f'{current_dir}' + '.xlsx', sheet_name=i.replace('.txt', ''), index=False)
+    df.to_excel(writer, sheet_name=f'{i}', index=False)
 
 
 # Get the thikness and diameter of the sample in mm, transform them in m
@@ -48,9 +41,10 @@ try:
 except FileExistsError:
     print("You have already generated necessary files.")
 finally:
-    for i in glob.glob('*.txt'):
-        data_processing()
-        export_data_zview()
-        export_data_excel()
+    with pd.ExcelWriter(f'out.xlsx') as writer:
+        for i in glob.glob('*.txt'):
+            data_processing()
+            export_data_zview()
+            export_data_excel()
 
 print("Processing of your absorption data is finished successfully!")
