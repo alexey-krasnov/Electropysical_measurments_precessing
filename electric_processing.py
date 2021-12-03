@@ -40,6 +40,7 @@ def data_processing():
     df['φ'] = df['-φ'] * (-1)  # Positive phase angle
     df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductivity
     df['σspec, Sm/cm'] = (df['σu'] * h * 0.01) / s  # Specific conductivity in Sm/cm
+    df['logσspec'] = np.log10(df['σspec, Sm/cm'])  # lg of specific conductivity 
     df['ε\''] = df['Cu'] / c_0  # real part of dielectric constant
     df['ε\"'] = df['σu'] / (df['ω'] * c_0)  # imaginary part od dielectric constant
     df['β\''] = 1 / df['ε\'']
@@ -52,7 +53,7 @@ def data_processing():
 def export_data_excel():
     """Create one excel file and store the electrophysical values at one temperature as the corresponding sheet."""
     df.to_excel(writer, sheet_name=f'{i.replace(".txt", "")}', index=False,
-                columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm',
+                columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'logσspec',
                          'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
 
