@@ -8,7 +8,7 @@ import os
 def get_user_input():
     global h, d, s, c_0
     """Get the thickness and diameter of the sample from user. Calculate surface area and vacuum capacity"""
-    # Get the thickness and diameter of the sample in mm, transform them in m
+    # Get the thickness and diameter of the sample in mm, transform them in m (SI)
     while True:
         try:
             h = float(input("Enter the thickness of the sample in mm: ")) / 1000
@@ -30,10 +30,10 @@ def data_processing():
     df = pd.read_csv(i, names=colnames, sep=";")
     phi_radian = (df['-φ'] * pi * -1) / 180   # Transform phase angle into radian
     # Calculation of the corresponding electrophysical values.
-    df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of impedance Z
-    df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of impedance
-    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of impedance Z
-    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of impedance Z
+    df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
+    df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
+    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of the impedance modulus|Z|
+    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of the impedance modulus |Z|
     df['logf'] = np.log10(df['f'])  # lg of frequency
     df['ω'] = 2 * pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2))  # real capacity
@@ -41,13 +41,13 @@ def data_processing():
     df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductivity
     df['σspec, Sm/cm'] = (df['σu'] * h * 0.01) / s  # Specific conductivity in Sm/cm
     df['logσspec'] = np.log10(df['σspec, Sm/cm'])  # lg of specific conductivity 
-    df['ε\''] = df['Cu'] / c_0  # real part of dielectric constant
-    df['ε\"'] = df['σu'] / (df['ω'] * c_0)  # imaginary part od dielectric constant
+    df['ε\''] = df['Cu'] / c_0  # Real part of the dielectric constant
+    df['ε\"'] = df['σu'] / (df['ω'] * c_0)  # Imaginary part of the dielectric constant
     df['β\''] = 1 / df['ε\'']
     df['β\"'] = 1 / df['ε\"']
-    df['tanδ'] = df['ε\"'] / df['ε\'']  # dielectric loss tangent
-    df['M\''] = df['ω'] * c_0 * df["Z\""]  # real part of electric modulus
-    df['M\"'] = df['ω'] * c_0 * df['Z\'']  # imaginary part of electric modulus
+    df['tanδ'] = df['ε\"'] / df['ε\'']  # Dielectric loss tangent
+    df['M\''] = df['ω'] * c_0 * df["Z\""]  # Real part of the electric modulus
+    df['M\"'] = df['ω'] * c_0 * df['Z\'']  # Imaginary part of the electric modulus
 
 
 def export_data_excel():
