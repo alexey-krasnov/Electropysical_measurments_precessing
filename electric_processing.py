@@ -24,7 +24,8 @@ def get_user_input():
 
 
 def data_processing():
-    """Read data from the raw csv files in the current directory, processing, and writing data in the DataFrame."""
+    """Read data from the raw csv files in the current directory, processing, and writing data in the DataFrame.
+    Please, check the input files, they should be in form of columns separated with ';'."""
     global df
     colnames = ['f', '|Z|', '-φ']  # Assign column names
     df = pd.read_csv(i, names=colnames, sep=";")
@@ -40,7 +41,7 @@ def data_processing():
     df['φ'] = df['-φ'] * (-1)  # Positive phase angle
     df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductivity
     df['σspec, Sm/cm'] = (df['σu'] * h * 0.01) / s  # Specific conductivity in Sm/cm
-    df['logσspec'] = np.log10(df['σspec, Sm/cm'])  # lg of specific conductivity 
+    df['logσspec'] = np.log10(df['σspec, Sm/cm'])  # lg of specific conductivity
     df['ε\''] = df['Cu'] / c_0  # Real part of the dielectric constant
     df['ε\"'] = df['σu'] / (df['ω'] * c_0)  # Imaginary part of the dielectric constant
     df['β\''] = 1 / df['ε\'']
