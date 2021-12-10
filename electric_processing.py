@@ -2,6 +2,7 @@ import pandas as pd
 import glob
 import numpy as np
 import os
+from timeit import timeit
 
 
 def get_user_input():
@@ -32,8 +33,8 @@ def data_processing():
     # Calculation of the corresponding electrophysical values.
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
-    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of the impedance modulus|Z|
-    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of the impedance modulus |Z|
+    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of the impedance modulus
+    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of the impedance modulus
     df['logf'] = np.log10(df['f'])  # lg of frequency
     df['ω'] = 2 * np.pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2))  # real capacity
@@ -51,20 +52,21 @@ def data_processing():
 
 
 def export_data_excel():
-    """Create one excel file and store the electrophysical values at one temperature as the corresponding sheet."""
+    """Create one Excel file and store the electrophysical values at one temperature as the corresponding sheet."""
     df.to_excel(writer, sheet_name=f'{i.replace(".txt", "")}', index=False,
                 columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'logσspec',
                          'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
 
 def export_data_zview():
-    """Make a directory ans export data as txt files for Zview processing. The format of txt file is f, Z', -Z". """
+    """Make a directory and export data as txt files for Zview processing. The format of txt file is f, Z', -Z". """
     df["-Z\", Om·cm"] = df["Z\", Om·cm"] * (-1)
     df.to_csv(f'{outdir}/{i}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
 current_dir = os.path.basename(os.getcwd())  # Get name of current directory
 outdir = 'Zview_files'  # Directory for Zview out files
+
 # Check if you have already run the program and got the files.
 if f'{current_dir}.xlsx' and outdir in glob.glob('*'):
     print("You have already generated necessary files.")
@@ -77,3 +79,6 @@ else:
             export_data_excel()
             export_data_zview()
     print("Processing of your absorption data is finished successfully!")
+# print("data_processing takes", timeit(data_processing, number=1000), 'seconds')
+# print("export_data_excel takes", timeit(export_data_excel, number=1000), 'seconds')
+# print("export_data_zview takes", timeit(export_data_zview, number=1000), 'seconds')
