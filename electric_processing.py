@@ -1,6 +1,5 @@
 import pandas as pd
 import glob
-from math import pi
 import numpy as np
 import os
 
@@ -17,7 +16,7 @@ def get_user_input():
             print("The values should be only digits, e.g. 1.2 and 13.5.")
         else:
             # Calculate the surface area of the sample in m^2
-            s = (pi * d * d) / 4
+            s = (np.pi * d * d) / 4
             # Calculate vacuum capacity
             c_0 = ((8.854 * (10 ** -12)) * s) / h
             break
@@ -29,14 +28,14 @@ def data_processing():
     global df
     colnames = ['f', '|Z|', '-φ']  # Assign column names
     df = pd.read_csv(i, names=colnames, sep=";")
-    phi_radian = (df['-φ'] * pi * -1) / 180   # Transform phase angle into radian
+    phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
     # Calculation of the corresponding electrophysical values.
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
     df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of the impedance modulus|Z|
     df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of the impedance modulus |Z|
     df['logf'] = np.log10(df['f'])  # lg of frequency
-    df['ω'] = 2 * pi * df['f']  # circular frequency
+    df['ω'] = 2 * np.pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2))  # real capacity
     df['φ'] = df['-φ'] * (-1)  # Positive phase angle
     df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductivity
