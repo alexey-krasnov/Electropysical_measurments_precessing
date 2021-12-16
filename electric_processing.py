@@ -31,19 +31,18 @@ def data_reading():
 
 
 def data_processing():
-    """Processing, and writing data in the DataFrame."""
+    """Processing, calculation of the corresponding electrophysical values. Writing data in the DataFrame."""
     phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
-    # Calculation of the corresponding electrophysical values.
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
-    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * S / H # Specific real part of the impedance modulus
-    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * S / H # Specific imaginary part of the impedance modulus
+    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * S / H  # Specific real part of the impedance modulus
+    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * S / H  # Specific imaginary part of the impedance modulus
     df['logf'] = np.log10(df['f'])  # lg of frequency
     df['ω'] = 2 * np.pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2))  # real capacity
     df['φ'] = df['-φ'] * (-1)  # Positive phase angle
     df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductivity
-    df['σspec, Sm/cm'] = (df['σu'] * H* 0.01) / S  # Specific conductivity in Sm/cm
+    df['σspec, Sm/cm'] = (df['σu'] * H * 0.01) / S  # Specific conductivity in Sm/cm
     df['logσspec'] = np.log10(df['σspec, Sm/cm'])  # lg of specific conductivity
     df['ε\''] = df['Cu'] / C_0  # Real part of the dielectric constant
     df['ε\"'] = df['σu'] / (df['ω'] * C_0)  # Imaginary part of the dielectric constant
