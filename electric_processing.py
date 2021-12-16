@@ -32,7 +32,6 @@ def data_reading():
 
 def data_processing():
     """Processing, and writing data in the DataFrame."""
-    global H, D
     phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
     # Calculation of the corresponding electrophysical values.
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
@@ -70,9 +69,7 @@ def export_data_zview():
 
 current_dir = os.path.basename(os.getcwd())  # Get name of current directory
 out_dir = 'Zview_files'  # Directory for Zview out files
-
 # Check if you have already run the program and got the files.
-# if f'{current_dir}.xlsx' and out_dir in glob.glob('*'):
 if os.path.exists(out_dir) and glob.glob('*.xlsx'):
     print("You have already generated necessary files.")
 else:
