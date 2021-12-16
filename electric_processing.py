@@ -76,8 +76,9 @@ else:
     try:
         os.mkdir(out_dir)
     except FileExistsError:
-        pass
+        print('Zview files will be rewritten...')
     finally:
+        # Generate or rewrite all files in any cases
         with pd.ExcelWriter(f'{current_dir}_h={H}_d={D}.xlsx') as writer:
             for i in sorted(glob.glob('*.txt')):
                 data_reading()

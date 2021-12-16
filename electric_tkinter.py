@@ -82,7 +82,7 @@ from tkinter import filedialog as fd
 # GUI
 root = Tk()
 root.title("Electric Processing")
-root.geometry('400x400+100+200')
+root.geometry('400x200+100+200')
 root.resizable(width=True, height=True)
 H = StringVar()  # get thickness of the sample
 D = StringVar()  # get diameter of the sample
@@ -136,7 +136,5 @@ b1 = Button(text="Открыть", command=insert_text)
 b1.grid(row=5, column=1, sticky=E)
 b2 = Button(text="Сохранить", command=extract_text)
 b2.grid(row=5, column=2, sticky=W)
-
-
 
 root.mainloop()
