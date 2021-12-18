@@ -18,7 +18,7 @@ def get_user_input():
             # Calculate the surface area of the sample in m^2
             S = (np.pi * D * D) / 4
             # Calculate vacuum capacity
-            C_0 = ((8.854 * (10 ** -12)) * S) / H
+            C_0 = ((8.854 * (10** -12)) * S) / H
             break
 
 
