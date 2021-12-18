@@ -7,7 +7,7 @@ import pandas as pd
 def get_user_input():
     global H, D, S, C_0
     """Get the thickness and diameter of the sample from user in mm, transform them in m (SI). 
-    Calculate surface area and vacuum capacity"""
+    Calculate surface area and vacuum capacity."""
     while True:
         try:
             H = float(input("Enter the thickness of the sample in mm: ")) / 1000
