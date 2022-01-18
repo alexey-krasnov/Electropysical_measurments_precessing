@@ -70,14 +70,14 @@ def export_data_as_txt():
     """Make a directory and export data as txt files with the electrophysical values
     for further plotting processing. """
     df.to_csv(f'{data_dir}/{i}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm',
-                'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'], sep=' ', index=False)
+                'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'], sep=';', index=False)
 
 
 current_dir = os.path.basename(os.getcwd())  # Get name of current directory
 out_dir = 'Zview_files'  # Directory for Zview out files
 data_dir = 'Data_txt'  # Directory for txt files
 # Check if you have already run the program and got the files.
-if os.path.exists(out_dir) and os.path.exists(data_dir) and glob.glob('*.xlsx'):
+if out_dir and data_dir and glob.glob('*.xlsx'):
     print("You have already generated necessary files.")
 else:
     get_user_input()
