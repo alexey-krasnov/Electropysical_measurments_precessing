@@ -77,7 +77,7 @@ current_dir = os.path.basename(os.getcwd())  # Get name of current directory
 out_dir = 'Zview_files'  # Directory for Zview out files
 data_dir = 'Data_txt'  # Directory for txt files
 # Check if you have already run the program and got the files.
-if out_dir and data_dir and glob.glob('*.xlsx'):
+if os.path.exists(out_dir) and os.path.exists(data_dir) and glob.glob('*.xlsx'):
     print("You have already generated necessary files.")
 else:
     get_user_input()
@@ -85,7 +85,7 @@ else:
         os.mkdir(out_dir)
         os.mkdir(data_dir)
     except FileExistsError:
-        print('Warning!!!Files will be rewritten...')
+        print('Warning!!! Files will be rewritten...')
     finally:
         # Generate or rewrite all files in any cases
         with pd.ExcelWriter(f'{current_dir}_h={H}_d={D}.xlsx') as writer:
