@@ -31,7 +31,7 @@ def data_reading():
 
 
 def data_processing():
-    """Processing, calculation of the corresponding electrophysical values. Writing data in the DataFrame."""
+    """Processing, calculation of the corresponding electrophysical values. Collecting data in the DataFrame."""
     phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
