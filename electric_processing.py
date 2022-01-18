@@ -66,17 +66,26 @@ def export_data_zview():
     df.to_csv(f'{out_dir}/{i}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
+def export_data_as_txt():
+    """Make a directory and export data as txt files with the electrophysical values
+    for further plotting processing. """
+    df.to_csv(f'{data_dir}/{i}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm',
+                'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'], sep=' ', index=False)
+
+
 current_dir = os.path.basename(os.getcwd())  # Get name of current directory
 out_dir = 'Zview_files'  # Directory for Zview out files
+data_dir = 'Data_txt'  # Directory for txt files
 # Check if you have already run the program and got the files.
-if os.path.exists(out_dir) and glob.glob('*.xlsx'):
+if os.path.exists(out_dir) and os.path.exists(data_dir) and glob.glob('*.xlsx'):
     print("You have already generated necessary files.")
 else:
     get_user_input()
     try:
         os.mkdir(out_dir)
+        os.mkdir(data_dir)
     except FileExistsError:
-        print('Zview files will be rewritten...')
+        print('Warning!!!Files will be rewritten...')
     finally:
         # Generate or rewrite all files in any cases
         with pd.ExcelWriter(f'{current_dir}_h={H}_d={D}.xlsx') as writer:
@@ -85,4 +94,5 @@ else:
                 data_processing()
                 export_data_excel()
                 export_data_zview()
+                export_data_as_txt()
         print("Processing of your absorption data is finished successfully!")
