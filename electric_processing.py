@@ -73,31 +73,31 @@ def export_data_zview(df, dir_name):
 def export_data_as_txt(df, dir_name):
     """Make a directory and export data as txt files with the electrophysical values
     for further plotting processing. """
-    df.to_csv(f'{dir_name}/{i}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm',
-                'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'], sep=';', index=False)
+    df.to_csv(f'{dir_name}/{i}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
+                                          'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ',
+                                          'M\'', 'M\"'], sep=';', index=False)
+
 
 def makedir(name):
     try:
         os.mkdir(name)
     except FileExistsError:
-        print('Warning!!! Files have already been generated')
+        print(f'Warning!!! {name} directory have already been generated')
 
 
 # Get name of current directory
 current_dir = os.path.basename(os.getcwd())
 # Check if you have already run the program and got all generated files.
-generated_dirs = {'Zview_files': os.path.exists('Zview_files'),
-                   'Data_txt': os.path.exists('Data_txt'),
-                  }
+generated_dirs = {'Zview_files': os.path.exists('Zview_files'), 'Data_txt': os.path.exists('Data_txt')}
 
-if all([file==True for file in generated_dirs.values()]) \
+if all([file for file in generated_dirs.values()]) \
         and glob.glob(f'{current_dir}*.xlsx'):
     print("You have already generated necessary files.")
 else:
-    print("'Warning!!! All existed files will be rewritten now...'")
-    for dir, item in generated_dirs.items():
-        if item == False:
-            makedir(dir)
+    print('Warning!!! All existed files will be rewritten now...')
+    for directory, item in generated_dirs.items():
+        if not item:
+            makedir(directory)
 
     height, diameter = get_user_input()
     geometrical_params = calc_geometrical_params(H=height, D=diameter)
