@@ -79,11 +79,7 @@ def export_data_zview(df, dir_name):
 def export_data_as_txt(df, dir_name):
     """Make a directory and export data as txt files with the electrophysical values
     for further plotting processing. """
-<<<<<<< HEAD
-    df.to_csv(f'{dir_name}/{i}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
-=======
     df.to_csv(f'{dir_name}/{txt_file}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
->>>>>>> build
                                           'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ',
                                           'M\'', 'M\"'], sep=';', index=False)
 
@@ -101,12 +97,8 @@ current_dir = os.path.basename(os.getcwd())
 # Check if you have already run the program and got all generated files.
 generated_dirs = {'Zview_files': os.path.exists('Zview_files'), 'Data_txt': os.path.exists('Data_txt')}
 
-<<<<<<< HEAD
-if all([file for file in generated_dirs.values()]) \
-        and glob.glob(f'{current_dir}*.xlsx'):
-=======
+
 if all(generated_dirs.values()) and glob.glob(f'{current_dir}*.xlsx'):
->>>>>>> build
     print("You have already generated necessary files.")
 else:
     print('Warning!!! All existed files will be rewritten now...')
