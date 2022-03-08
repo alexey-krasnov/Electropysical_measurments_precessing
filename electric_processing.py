@@ -1,3 +1,9 @@
+# -*- coding: UTF-8 -*-
+"""Process raw data from RLC meter as txt files.
+Get final Excel file with electrophysical characteristics,
+directory 'Zview_files' with txt files for Zview program,
+and directory 'Data_txt' with txt files for plotting or further study"""
+
 import os
 import glob
 import numpy as np
