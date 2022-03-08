@@ -5,9 +5,8 @@ import pandas as pd
 
 
 def get_user_input() -> tuple:
-    global H, D
-    """Get the thickness and diameter of the sample from user in mm, transform them in m (SI). 
-    Calculate surface area and vacuum capacity."""
+    """Get the height and diameter of the sample from user in mm, transform them in m (SI).
+    Calculate and return surface area and vacuum capacity."""
     while True:
         try:
             H = float(input("Enter the thickness of the sample in mm: ")) / 1000
@@ -15,24 +14,26 @@ def get_user_input() -> tuple:
         except ValueError:
             print("The values should be only digits, e.g. 1.2 and 13.5.")
         else:
-            # Calculate the surface area of the sample in m^2
-            S = (np.pi * D * D) / 4
-            # Calculate vacuum capacity
-            C_0 = ((8.854 * (10**-12)) * S) / H
             break
+    return H, D
+
+
+def calc_geometrical_params(H, D) -> tuple:
+    """"Calculate the surface area S of the sample in m^2 and vacuum capacity C_0"""
+    S = (np.pi * D * D) / 4
+    C_0 = ((8.854 * (10**-12)) * S) / H
     return S, C_0
 
 
 def data_reading():
-    """Read data from the raw csv files in the current directory.
-    Please, check the input files, they should be in form of columns separated with ';'."""
-    # global df
+    """Read data from the raw csv files in the current directory. Return DataFrame.
+    Please, check the input files, they should be in the form of columns separated with ';'."""
     colnames = ['f', '|Z|', '-φ']  # Assign column names
     df = pd.read_csv(i, names=colnames, sep=";")
     return df
 
 
-def data_processing(df, S, C_0):
+def data_processing(df, H, S, C_0):
     """Processing, calculation of the corresponding electrophysical values. Collecting data in the DataFrame."""
     phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
@@ -92,18 +93,19 @@ generated_dirs = {'Zview_files': os.path.exists('Zview_files'),
 if all([file==True for file in generated_dirs.values()]) \
         and glob.glob(f'{current_dir}*.xlsx'):
     print("You have already generated necessary files.")
+else:
+    print("'Warning!!! All existed files will be rewritten now...'")
+    for dir, item in generated_dirs.items():
+        if item == False:
+            makedir(dir)
 
-for dir, item in generated_dirs.items():
-    if item == False:
-        makedir(dir)
-
-user_params = get_user_input()
-
-with pd.ExcelWriter(f'{current_dir}_h={H}_d={D}.xlsx') as writer:
-    for i in sorted(glob.glob('*.txt')):
-        current_data_frame = data_reading()
-        data_processing(current_data_frame, *user_params)
-        export_data_excel(current_data_frame)
-        export_data_zview(current_data_frame, dir_name='Zview_files')
-        export_data_as_txt(current_data_frame, dir_name='Data_txt')
-print("Processing of your absorption data is finished successfully!")
+    height, diameter = get_user_input()
+    geometrical_params = calc_geometrical_params(H=height, D=diameter)
+    with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
+        for i in sorted(glob.glob('*.txt')):
+            current_data_frame = data_reading()
+            data_processing(current_data_frame, height, *geometrical_params)
+            export_data_excel(current_data_frame)
+            export_data_zview(current_data_frame, dir_name='Zview_files')
+            export_data_as_txt(current_data_frame, dir_name='Data_txt')
+    print("Processing of your absorption data is finished successfully!")
