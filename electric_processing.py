@@ -15,20 +15,20 @@ def get_user_input() -> tuple:
     Calculate and return surface area and vacuum capacity."""
     while True:
         try:
-            H = float(input("Enter the thickness of the sample in mm: ")) / 1000
-            D = float(input("Enter the diameter of the sample in mm: ")) / 1000
+            h = float(input("Enter the thickness of the sample in mm: ")) / 1000
+            d = float(input("Enter the diameter of the sample in mm: ")) / 1000
         except ValueError:
             print("The values should be only digits, e.g. 1.2 and 13.5.")
         else:
             break
-    return H, D
+    return h, d
 
 
-def calc_geometrical_params(H, D) -> tuple:
+def calc_geometrical_params(h, d) -> tuple:
     """"Calculate the surface area S of the sample in m^2 and vacuum capacity C_0"""
-    S = (np.pi * D * D) / 4
-    C_0 = ((8.854 * (10**-12)) * S) / H
-    return S, C_0
+    s = (np.pi * d ** 2) / 4
+    c_0 = ((8.854 * (10**-12)) * s) / h
+    return s, c_0
 
 
 def data_reading():
@@ -39,27 +39,27 @@ def data_reading():
     return df
 
 
-def data_processing(df, H, S, C_0):
+def data_processing(df, h, s, c_0):
     """Processing, calculation of the corresponding electrophysical values. Collecting data in the DataFrame."""
     phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
-    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * S / H  # Specific real part of the impedance modulus
-    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * S / H  # Specific imaginary part of the impedance modulus
+    df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of the impedance modulus
+    df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of the impedance modulus
     df['logf'] = np.log10(df['f'])  # lg of frequency
     df['ω'] = 2 * np.pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2))  # real capacity
     df['φ'] = df['-φ'] * (-1)  # Positive phase angle
     df['σu'] = df['Z\''] / ((df['Z\''])**2 + (df["Z\""])**2)  # Conductivity
-    df['σspec, Sm/cm'] = (df['σu'] * H * 0.01) / S  # Specific conductivity in Sm/cm
+    df['σspec, Sm/cm'] = (df['σu'] * h * 0.01) / s  # Specific conductivity in Sm/cm
     df['logσspec'] = np.log10(df['σspec, Sm/cm'])  # lg of specific conductivity
-    df['ε\''] = df['Cu'] / C_0  # Real part of the dielectric constant
-    df['ε\"'] = df['σu'] / (df['ω'] * C_0)  # Imaginary part of the dielectric constant
+    df['ε\''] = df['Cu'] / c_0  # Real part of the dielectric constant
+    df['ε\"'] = df['σu'] / (df['ω'] * c_0)  # Imaginary part of the dielectric constant
     df['β\''] = 1 / df['ε\'']
     df['β\"'] = 1 / df['ε\"']
     df['tanδ'] = df['ε\"'] / df['ε\'']  # Dielectric loss tangent
-    df['M\''] = df['ω'] * C_0 * df["Z\""]  # Real part of the electric modulus
-    df['M\"'] = df['ω'] * C_0 * df['Z\'']  # Imaginary part of the electric modulus
+    df['M\''] = df['ω'] * c_0 * df["Z\""]  # Real part of the electric modulus
+    df['M\"'] = df['ω'] * c_0 * df['Z\'']  # Imaginary part of the electric modulus
     return df
 
 
@@ -106,9 +106,8 @@ else:
         if not item:
             makedir(directory)
             print(f'{directory} directory has been created')
-
     height, diameter = get_user_input()
-    geometrical_params = calc_geometrical_params(H=height, D=diameter)
+    geometrical_params = calc_geometrical_params(h=height, d=diameter)
     with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
         for txt_file in sorted(glob.glob('*.txt')):
             current_data_frame = data_reading()
