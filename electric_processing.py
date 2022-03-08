@@ -92,11 +92,10 @@ def makedir(name):
         print(f'{name} directory have already been generated')
 
 
-# Get name of current directory
-current_dir = os.path.basename(os.getcwd())
 # Check if you have already run the program and got all generated files.
 generated_dirs = {'Zview_files': os.path.exists('Zview_files'), 'Data_txt': os.path.exists('Data_txt')}
-
+# Get name of current directory
+current_dir = os.path.basename(os.getcwd())
 
 if all(generated_dirs.values()) and glob.glob(f'{current_dir}*.xlsx'):
     print("You have already generated necessary files.")
