@@ -35,7 +35,7 @@ def data_reading():
     """Read data from the raw csv files in the current directory. Return DataFrame.
     Please, check the input files, they should be in the form of columns separated with ';'."""
     colnames = ['f', '|Z|', '-φ']  # Assign column names
-    df = pd.read_csv(i, names=colnames, sep=";")
+    df = pd.read_csv(txt_file, names=colnames, sep=";")
     return df
 
 
@@ -65,7 +65,7 @@ def data_processing(df, H, S, C_0):
 
 def export_data_excel(df):
     """Create one Excel file and store the electrophysical values at one temperature as the corresponding sheet."""
-    df.to_excel(writer, sheet_name=f'{i.replace(".txt", "")}', index=False,
+    df.to_excel(writer, sheet_name=f'{txt_file.replace(".txt", "")}', index=False,
                 columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'logσspec',
                          'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
@@ -73,13 +73,13 @@ def export_data_excel(df):
 def export_data_zview(df, dir_name):
     """Make a directory and export data as txt files for Zview processing. The format of txt file is f, Z', -Z". """
     df["-Z\", Om·cm"] = df["Z\", Om·cm"] * (-1)
-    df.to_csv(f'{dir_name}/{i}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
+    df.to_csv(f'{dir_name}/{txt_file}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
 def export_data_as_txt(df, dir_name):
     """Make a directory and export data as txt files with the electrophysical values
     for further plotting processing. """
-    df.to_csv(f'{dir_name}/{i}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
+    df.to_csv(f'{dir_name}/{txt_file}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
                                           'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ',
                                           'M\'', 'M\"'], sep=';', index=False)
 
@@ -97,8 +97,7 @@ current_dir = os.path.basename(os.getcwd())
 # Check if you have already run the program and got all generated files.
 generated_dirs = {'Zview_files': os.path.exists('Zview_files'), 'Data_txt': os.path.exists('Data_txt')}
 
-if all([file for file in generated_dirs.values()]) \
-        and glob.glob(f'{current_dir}*.xlsx'):
+if all(generated_dirs.values()) and glob.glob(f'{current_dir}*.xlsx'):
     print("You have already generated necessary files.")
 else:
     print('Warning!!! All existed files will be rewritten now...')
@@ -110,7 +109,7 @@ else:
     height, diameter = get_user_input()
     geometrical_params = calc_geometrical_params(H=height, D=diameter)
     with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
-        for i in sorted(glob.glob('*.txt')):
+        for txt_file in sorted(glob.glob('*.txt')):
             current_data_frame = data_reading()
             data_processing(current_data_frame, height, *geometrical_params)
             export_data_excel(current_data_frame)
