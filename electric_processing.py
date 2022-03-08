@@ -79,10 +79,11 @@ def export_data_as_txt(df, dir_name):
 
 
 def makedir(name):
+    """Create 'Zview_files' and 'Data_txt' directories if they are not existed"""
     try:
         os.mkdir(name)
     except FileExistsError:
-        print(f'Warning!!! {name} directory have already been generated')
+        print(f'{name} directory have already been generated')
 
 
 # Get name of current directory
@@ -98,6 +99,7 @@ else:
     for directory, item in generated_dirs.items():
         if not item:
             makedir(directory)
+            print(f'{directory} directory has been created')
 
     height, diameter = get_user_input()
     geometrical_params = calc_geometrical_params(H=height, D=diameter)
