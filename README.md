@@ -30,7 +30,11 @@ Within the directory containing csv (.txt) files files, run:
 electric_processing.py
 ```
 it ask you to input the height and diameter of the cylindrical sample in mm.
-Then program will read and process data from the csv files. After calculation programm creates one Excel file and store the electrophysical values at each temperature as the corresponding sheet. It also makes directories 'Zview_files' with .txt files for Zview program, and 'Data_txt' with txt files for plotting or further study. Please, check the Example catalogue for sample input txt files and examples of the output files. 
+Then program will read and process data from the csv files. After calculation programm creates one Excel file and store the electrophysical values at each temperature as the corresponding sheet. It also makes directories 'Zview_files' with .txt files for Zview program, and 'Data_txt' with txt files for plotting or further study. Please check the Example catalogue for sample input txt files and examples of the output files. 
+
+## Questions, bug reports, feature requests
+
+Please use the Github [issue tracker](https://github.com/alexey-krasnov/Impedance_data_processing/issues/) for any questions, feature requests or bug reports.
 
 ## Author
 
