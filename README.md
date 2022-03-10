@@ -6,7 +6,7 @@
 </p>
 
 # electric_processing
-> Python script that automatically processes csv files in txt format recorded by from RLC impedance meter.
+> Python script that automatically processes csv (.txt) files recorded by RLC impedance meter.
 
 ##  Prerequisites
 
@@ -24,19 +24,19 @@ X2;Y2;Z2
  .;.;.
  .;.;.
 ```
-where Xi is the recorded linear frequency, Yi - the impedance modulus, Zi - phase angle. Note that headers are absent. Please, check the Example catalogue for sample txt files. 
+where Xi is the recorded linear frequency, Yi - the impedance modulus, Zi - phase angle. Note that headers are absent.
 Within the directory containing csv (.txt) files files, run:
 ```sh
 electric_processing.py
 ```
 it ask you to input the height and diameter of the cylindrical sample in mm.
-Then program will read and process data from the csv files. After calculation programm creates one Excel file and store the electrophysical values at each temperature as the corresponding sheet. It also makes directories 'Zview_files' with .txt files for Zview program, and 'Data_txt' with txt files for plotting or further study.
+Then program will read and process data from the csv files. After calculation programm creates one Excel file and store the electrophysical values at each temperature as the corresponding sheet. It also makes directories 'Zview_files' with .txt files for Zview program, and 'Data_txt' with txt files for plotting or further study. Please, check the Example catalogue for sample input txt files and examples of the output files. 
 
 ## Author
 
 👤 **Aleksei Krasnov**
 
-* Website: https://www.linkedin.com/in/aleksei-krasnov-b53b2ab6/
+* Website: https://www.researchgate.net/profile/Aleksei-Krasnov
 * Twitter: [@AlekseiKrasnov4](https://twitter.com/AlekseiKrasnov4)
 * Github: [@alexey-krasnov](https://github.com/alexey-krasnov)
 * LinkedIn: [@aleksei-krasnov-b53b2ab6](https://linkedin.com/in/aleksei-krasnov-b53b2ab6)
