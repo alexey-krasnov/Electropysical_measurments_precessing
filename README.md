@@ -5,7 +5,7 @@
   </a>
 </p>
 
-> Process raw data from RLC impedance meter as txt files. The format of txt file is f, Z', Z". Read data from the raw csv files in the current directory, processing, and writing data in the DataFrame. Create one Excel file and store the electrophysical values at one temperature as the corresponding sheet. Make a directories 'Zview_files' with txt files for Zview program, and 'Data_txt' with txt files for plotting or further study.
+> Process raw data from RLC impedance meter as txt files. The format of txt file should be f, Z', Z". Read data from the raw csv files in the current directory, processing, and writing data in the DataFrame. Create one Excel file and store the electrophysical values at one temperature as the corresponding sheet. Make a directories 'Zview_files' with txt files for Zview program, and 'Data_txt' with txt files for plotting or further study.
 
 ## Usage
 
