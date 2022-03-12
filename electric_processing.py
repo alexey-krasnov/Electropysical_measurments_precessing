@@ -86,13 +86,13 @@ def export_data_as_txt(df, dir_name):
 
 
 def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
+    """Check existence of 'Zview_files' and 'Data_txt' directories.
+    Ask user whether program should overwrite files or not"""
     def create_dirs(*args):
         """Create 'Zview_files' and 'Data_txt' directories"""
         for name in args:
             Path(name).mkdir(exist_ok=True)
             print(f'{name} directory has been created')
-        # return True
-
     if not (all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx')):
         return create_dirs(*dict_of_dirs.keys())
     else:
