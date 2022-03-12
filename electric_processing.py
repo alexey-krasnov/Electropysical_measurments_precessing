@@ -4,11 +4,12 @@ Get final Excel file with electrophysical characteristics,
 directory 'Zview_files' with txt files for Zview program,
 and directory 'Data_txt' with txt files for plotting or further study"""
 
-import os
+
 import glob
 import numpy as np
 import pandas as pd
 from pathlib import Path
+
 
 def get_user_input() -> tuple:
     """Get the height and diameter of the sample from user in mm, transform them in m (SI).
@@ -84,56 +85,31 @@ def export_data_as_txt(df, dir_name):
                                           'M\'', 'M\"'], sep=';', index=False)
 
 
-# def makedir(name):
-#     """Create 'Zview_files' and 'Data_txt' directories if they are not existed"""
-#     try:
-#         os.mkdir(name)
-#     except FileExistsError:
-#         print(f'{name} directory have already been generated')
-#
-#
-# # Check if you have already run the program and got all generated files.
-# generated_dirs = {'Zview_files': os.path.exists('Zview_files'), 'Data_txt': os.path.exists('Data_txt')}
-# # Get name of current directory
-# current_dir = os.path.basename(os.getcwd())
-#
-# if all(generated_dirs.values()) and glob.glob(f'{current_dir}*.xlsx'):
-#     print("You have already generated necessary files.")
-# else:
-#     print('Warning!!! All existed files will be rewritten now...')
-#     for directory, item in generated_dirs.items():
-#         if not item:
-#             makedir(directory)
-#             print(f'{directory} directory has been created')
-#     height, diameter = get_user_input()
-#     geometrical_params = calc_geometrical_params(h=height, d=diameter)
-#     with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
-#         for txt_file in sorted(glob.glob('*.txt')):
-#             current_data_frame = data_reading()
-#             data_processing(current_data_frame, height, *geometrical_params)
-#             export_data_excel(current_data_frame)
-#             export_data_zview(current_data_frame, dir_name='Zview_files')
-#             export_data_as_txt(current_data_frame, dir_name='Data_txt')
-#     print("Processing of your absorption data is finished successfully!")
+def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
+    def create_dirs(*args):
+        """Create 'Zview_files' and 'Data_txt' directories"""
+        for name in args:
+            Path(name).mkdir(exist_ok=True)
+            print(f'{name} directory has been created')
+            return True
 
-def create_dirs(*args):
-    """Create 'Zview_files' and 'Data_txt' directories"""
-    for name in args:
-        Path(name).mkdir(exist_ok=True)
-        print(f'{name} directory has been created')
+    if all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx'):
+        user_asks = input('Do yoy want to overwrite all files? Type Yes/No: ')
+        if user_asks in ('Yes', 'yes'):
+            print('Warning!!! All existed files will be rewritten now...')
+            create_dirs(*dict_of_dirs.keys())
+        else:
+            return None
+    create_dirs(*dict_of_dirs.keys())
 
 
-# Check if you have already run the program and got all generated files.
-generated_dirs = {'Zview_files': Path('Zview_files').exists(), 'Data_txt': Path('Data_txt').exists()}
-# Get name of current directory
-current_dir = Path.cwd().stem
-print(generated_dirs, current_dir, generated_dirs.keys())
-
-if all(generated_dirs.values()) and glob.glob(f'{current_dir}*.xlsx'):
-    user_asks = input('Do yoy want to overwrite all files? Type Yes/No: ')
-    if user_asks == 'Yes' or 'yes':
-        print('Warning!!! All existed files will be rewritten now...')
-        create_dirs(*generated_dirs.keys())
+if __name__ == "__main__":
+    generated_dirs = {'Zview_files': Path('Zview_files').exists(), 'Data_txt': Path('Data_txt').exists()}
+    current_dir = Path.cwd().stem
+    condition = check_dirs_existence(generated_dirs, current_dir)
+    if not condition:
+        print("Electric_processing program is stopped...")
+    else:
         height, diameter = get_user_input()
         geometrical_params = calc_geometrical_params(h=height, d=diameter)
         with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
@@ -144,15 +120,5 @@ if all(generated_dirs.values()) and glob.glob(f'{current_dir}*.xlsx'):
                 export_data_zview(current_data_frame, dir_name='Zview_files')
                 export_data_as_txt(current_data_frame, dir_name='Data_txt')
         print("Processing of your absorption data is finished successfully!")
-else:
-    create_dirs(*generated_dirs.keys())
-    height, diameter = get_user_input()
-    geometrical_params = calc_geometrical_params(h=height, d=diameter)
-    with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
-        for txt_file in sorted(glob.glob('*.txt')):
-            current_data_frame = data_reading()
-            data_processing(current_data_frame, height, *geometrical_params)
-            export_data_excel(current_data_frame)
-            export_data_zview(current_data_frame, dir_name='Zview_files')
-            export_data_as_txt(current_data_frame, dir_name='Data_txt')
-    print("Processing of your absorption data is finished successfully!")
+
+
