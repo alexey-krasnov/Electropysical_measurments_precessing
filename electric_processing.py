@@ -91,25 +91,26 @@ def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
         for name in args:
             Path(name).mkdir(exist_ok=True)
             print(f'{name} directory has been created')
-            return True
+        # return True
 
-    if all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx'):
+    if not (all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx')):
+        return create_dirs(*dict_of_dirs.keys())
+    else:
         user_asks = input('Do yoy want to overwrite all files? Type Yes/No: ')
         if user_asks in ('Yes', 'yes'):
             print('Warning!!! All existed files will be rewritten now...')
-            create_dirs(*dict_of_dirs.keys())
+            return create_dirs(*dict_of_dirs.keys())
         else:
-            return None
-    create_dirs(*dict_of_dirs.keys())
+            return True
 
 
 if __name__ == "__main__":
     generated_dirs = {'Zview_files': Path('Zview_files').exists(), 'Data_txt': Path('Data_txt').exists()}
     current_dir = Path.cwd().stem
-    condition = check_dirs_existence(generated_dirs, current_dir)
-    if not condition:
+    if check_dirs_existence(generated_dirs, current_dir):
         print("Electric_processing program is stopped...")
     else:
+        print('Running')
         height, diameter = get_user_input()
         geometrical_params = calc_geometrical_params(h=height, d=diameter)
         with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
@@ -120,5 +121,3 @@ if __name__ == "__main__":
                 export_data_zview(current_data_frame, dir_name='Zview_files')
                 export_data_as_txt(current_data_frame, dir_name='Data_txt')
         print("Processing of your absorption data is finished successfully!")
-
-
