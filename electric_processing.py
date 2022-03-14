@@ -113,7 +113,7 @@ if __name__ == "__main__":
         height, diameter = get_user_input()
         geometrical_params = calc_geometrical_params(h=height, d=diameter)
         with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
-            for txt_file in sorted(glob.glob('*.txt')):
+            for txt_file in sorted(glob.glob('[!requirements]*.txt')):
                 current_data_frame = data_reading()
                 data_processing(current_data_frame, height, *geometrical_params)
                 export_data_excel(current_data_frame)
