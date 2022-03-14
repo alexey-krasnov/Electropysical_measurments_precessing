@@ -108,7 +108,7 @@ if __name__ == "__main__":
     generated_dirs = {'Zview_files': Path('Zview_files').exists(), 'Data_txt': Path('Data_txt').exists()}
     current_dir = Path.cwd().stem
     if check_dirs_existence(generated_dirs, current_dir):
-        print("Electric_processing program is stopped...")
+        print("Electric_processing program is stopping...")
     else:
         print('Running')
         height, diameter = get_user_input()
