@@ -7,3 +7,5 @@ Zview_files/
 .DS_Store
 Data_txt/
 !requirements.txt
+*docx
+*doc
