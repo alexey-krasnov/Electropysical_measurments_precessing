@@ -36,7 +36,7 @@ def data_reading():
     """Read data from the raw csv files in the current directory. Return DataFrame.
     Please, check the input files, they should be in the form of columns separated with ';'."""
     colnames = ['f', '|Z|', '-φ']  # Assign column names
-    df = pd.read_csv(txt_file, names=colnames, sep=";")
+    df = pd.read_csv(txt_file, header=0, names=colnames, sep=";")
     return df
 
 

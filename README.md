@@ -24,7 +24,7 @@ X2;Y2;Z2
  .;.;.
  .;.;.
 ```
-where Xi is the recorded linear frequency, Yi - the impedance modulus, Zi - phase angle. Note that headers are absent.
+where Xi is the recorded linear frequency, Yi - the impedance modulus, Zi - phase angle. Note that the presence or absence of headers in the source files does not matter.
 Within the directory containing csv (.txt) files files, run:
 ```sh
 electric_processing.py
