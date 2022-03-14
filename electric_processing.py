@@ -6,9 +6,9 @@ and directory 'Data_txt' with txt files for plotting or further study"""
 
 
 import glob
+from pathlib import Path
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 
 def get_user_input() -> tuple:
@@ -25,7 +25,7 @@ def get_user_input() -> tuple:
     return h, d
 
 
-def calc_geometrical_params(h, d) -> tuple:
+def calc_geometrical_params(h: float, d: float) -> tuple:
     """"Calculate the surface area S of the sample in m^2 and vacuum capacity C_0"""
     s = (np.pi * d ** 2) / 4
     c_0 = ((8.854 * (10**-12)) * s) / h
@@ -47,6 +47,7 @@ def data_processing(df, h, s, c_0):
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
     df['Z\', Om·cm'] = df['|Z|'] * np.cos(phi_radian) * 100 * s / h  # Specific real part of the impedance modulus
     df["Z\", Om·cm"] = df['|Z|'] * np.sin(phi_radian) * 100 * s / h  # Specific imaginary part of the impedance modulus
+    # df['f'] = df['f'].astype('int')
     df['logf'] = np.log10(df['f'])  # lg of frequency
     df['ω'] = 2 * np.pi * df['f']  # circular frequency
     df['Cu'] = df["Z\""] / (df['ω'] * ((df['Z\''])**2 + (df["Z\""])**2))  # real capacity
@@ -95,13 +96,12 @@ def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
             print(f'{name} directory has been created')
     if not (all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx')):
         return create_dirs(*dict_of_dirs.keys())
-    else:
-        user_asks = input('Do yoy want to overwrite all files? Type Yes/No: ')
-        if user_asks in ('Yes', 'yes'):
-            print('Warning!!! All existed files will be rewritten now...')
-            return create_dirs(*dict_of_dirs.keys())
-        else:
-            return True
+
+    user_asks = input('Do yoy want to overwrite all files? Type Yes/No: ')
+    if user_asks in ('Yes', 'yes'):
+        print('Warning!!! All existed files will be rewritten now...')
+        return create_dirs(*dict_of_dirs.keys())
+    return True
 
 
 if __name__ == "__main__":
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     if check_dirs_existence(generated_dirs, current_dir):
         print("Electric_processing program is stopping...")
     else:
-        print('Running')
+        print('Running...')
         height, diameter = get_user_input()
         geometrical_params = calc_geometrical_params(h=height, d=diameter)
         with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
