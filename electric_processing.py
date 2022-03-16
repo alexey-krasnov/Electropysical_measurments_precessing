@@ -4,12 +4,10 @@ Get final Excel file with electrophysical characteristics,
 directory 'Zview_files' with txt files for Zview program,
 and directory 'Data_txt' with txt files for plotting or further study"""
 
-
 import glob
 from pathlib import Path
 import numpy as np
 import pandas as pd
-
 
 # Vacuum permittivity
 E_0 = 8.854 * (10**-12)
@@ -45,7 +43,8 @@ def data_reading():
 
 
 def data_processing(df, h, s, c_0):
-    """Processing, calculation of the corresponding electrophysical values. Collecting data in the DataFrame."""
+    """Processing, calculation of the corresponding electrophysical values.
+     Collecting data in the DataFrame."""
     phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
     df['Z\''] = df['|Z|'] * np.cos(phi_radian)  # Real part of the impedance modulus|Z|
     df["Z\""] = df['|Z|'] * np.sin(phi_radian)  # Imaginary part of the impedance modulus|Z|
@@ -69,24 +68,25 @@ def data_processing(df, h, s, c_0):
 
 
 def export_data_excel(df, file_name):
-    """Create one Excel file and store the electrophysical values at one temperature as the corresponding sheet."""
+    """Create one Excel file, store the electrophysical values at one temperature as the corresponding sheet."""
     df.to_excel(writer, sheet_name=f'{file_name.replace(".txt", "")}', index=False,
-                columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'logσspec',
-                         'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
+                columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
+                         'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
 
 def export_data_zview(df, dir_name, file_name):
-    """Make a directory and export data as txt files for Zview processing. The format of txt file is f, Z', -Z". """
+    """Make a directory and export data as txt files for Zview processing.
+    The format of txt file is f, Z', -Z". """
     df["-Z\", Om·cm"] = df["Z\", Om·cm"] * (-1)
     df.to_csv(f'{dir_name}/{file_name}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
 def export_data_as_txt(df, dir_name, file_name):
-    """Make a directory and export data as txt files with the electrophysical values
-    for further plotting processing. """
+    """Make a directory and export data as txt files
+    with the electrophysical values for further plotting processing."""
     df.to_csv(f'{dir_name}/{file_name}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
-                                          'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ',
-                                          'M\'', 'M\"'], sep=';', index=False)
+                                                  'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ',
+                                                  'M\'', 'M\"'], sep=';', index=False)
 
 
 def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
