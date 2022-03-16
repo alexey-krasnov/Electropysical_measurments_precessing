@@ -11,6 +11,10 @@ import numpy as np
 import pandas as pd
 
 
+# Vacuum permittivity
+E_0 = 8.854 * (10**-12)
+
+
 def get_user_input() -> tuple:
     """Get the height and diameter of the sample from user in mm, transform them in m (SI).
     Calculate and return surface area and vacuum capacity."""
@@ -28,15 +32,15 @@ def get_user_input() -> tuple:
 def calc_geometrical_params(h: float, d: float) -> tuple:
     """"Calculate the surface area S of the sample in m^2 and vacuum capacity C_0"""
     s = (np.pi * d ** 2) / 4
-    c_0 = ((8.854 * (10**-12)) * s) / h
+    c_0 = (E_0 * s) / h
     return s, c_0
 
 
 def data_reading():
     """Read data from the raw csv files in the current directory. Return DataFrame.
     Please, check the input files, they should be in the form of columns separated with ';'."""
-    colnames = ['f', '|Z|', '-φ']  # Assign column names
-    df = pd.read_csv(txt_file, header=0, names=colnames, sep=";")
+    col_names = ['f', '|Z|', '-φ']  # Assign column names
+    df = pd.read_csv(txt_file, header=0, names=col_names, sep=";")
     return df
 
 
@@ -64,23 +68,23 @@ def data_processing(df, h, s, c_0):
     return df
 
 
-def export_data_excel(df):
+def export_data_excel(df, file_name):
     """Create one Excel file and store the electrophysical values at one temperature as the corresponding sheet."""
-    df.to_excel(writer, sheet_name=f'{txt_file.replace(".txt", "")}', index=False,
+    df.to_excel(writer, sheet_name=f'{file_name.replace(".txt", "")}', index=False,
                 columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu', 'σspec, Sm/cm', 'logσspec',
                          'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
 
-def export_data_zview(df, dir_name):
+def export_data_zview(df, dir_name, file_name):
     """Make a directory and export data as txt files for Zview processing. The format of txt file is f, Z', -Z". """
     df["-Z\", Om·cm"] = df["Z\", Om·cm"] * (-1)
-    df.to_csv(f'{dir_name}/{txt_file}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
+    df.to_csv(f'{dir_name}/{file_name}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
-def export_data_as_txt(df, dir_name):
+def export_data_as_txt(df, dir_name, file_name):
     """Make a directory and export data as txt files with the electrophysical values
     for further plotting processing. """
-    df.to_csv(f'{dir_name}/{txt_file}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
+    df.to_csv(f'{dir_name}/{file_name}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
                                           'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ',
                                           'M\'', 'M\"'], sep=';', index=False)
 
@@ -96,8 +100,8 @@ def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
     if not (all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx')):
         return create_dirs(*dict_of_dirs.keys())
 
-    user_asks = input('Do yoy want to overwrite all files? Type Yes/No: ')
-    if user_asks in ('Yes', 'yes'):
+    user_answer = input('Do yoy want to overwrite all files? Type Yes/No: ')
+    if user_answer in ('Yes', 'yes'):
         print('Warning!!! All existed files will be rewritten now...')
         return create_dirs(*dict_of_dirs.keys())
     return True
@@ -106,17 +110,17 @@ def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
 if __name__ == "__main__":
     generated_dirs = {'Zview_files': Path('Zview_files').exists(), 'Data_txt': Path('Data_txt').exists()}
     current_dir = Path.cwd().stem
-    if check_dirs_existence(generated_dirs, current_dir):
+    if check_dirs_existence(dict_of_dirs=generated_dirs, work_dir=current_dir):
         print("Electric_processing program is stopping...")
     else:
         print('Running...')
         height, diameter = get_user_input()
-        geometrical_params = calc_geometrical_params(h=height, d=diameter)
+        surf_area, v_capacity = calc_geometrical_params(h=height, d=diameter)
         with pd.ExcelWriter(f'{current_dir}_h={height}_d={diameter}.xlsx') as writer:
             for txt_file in sorted(glob.glob('[!requirements]*.txt')):
-                current_data_frame = data_reading()
-                data_processing(current_data_frame, height, *geometrical_params)
-                export_data_excel(current_data_frame)
-                export_data_zview(current_data_frame, dir_name='Zview_files')
-                export_data_as_txt(current_data_frame, dir_name='Data_txt')
+                raw_data_frame = data_reading()
+                processed_df = data_processing(df=raw_data_frame, h=height, s=surf_area, c_0=v_capacity)
+                export_data_excel(df=processed_df, file_name=txt_file)
+                export_data_zview(df=processed_df, dir_name='Zview_files', file_name=txt_file)
+                export_data_as_txt(df=processed_df, dir_name='Data_txt', file_name=txt_file)
         print("Processing of your absorption data is finished successfully!")
