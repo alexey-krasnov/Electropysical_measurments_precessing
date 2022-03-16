@@ -42,7 +42,7 @@ def data_reading():
     return df
 
 
-def data_processing(df, h, s, c_0):
+def data_processing(df, h: float, s: float, c_0: float):
     """Processing, calculation of the corresponding electrophysical values.
      Collecting data in the DataFrame."""
     phi_radian = (df['-φ'] * np.pi * -1) / 180   # Transform phase angle into radian
@@ -67,21 +67,21 @@ def data_processing(df, h, s, c_0):
     return df
 
 
-def export_data_excel(df, file_name):
+def export_data_excel(df, file_name: str):
     """Create one Excel file, store the electrophysical values at one temperature as the corresponding sheet."""
     df.to_excel(writer, sheet_name=f'{file_name.replace(".txt", "")}', index=False,
                 columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
                          'σspec, Sm/cm', 'logσspec', 'ε\'', 'ε\"', 'β\'', 'β\"', 'tanδ', 'M\'', 'M\"'])
 
 
-def export_data_zview(df, dir_name, file_name):
+def export_data_zview(df, dir_name: str, file_name: str):
     """Make a directory and export data as txt files for Zview processing.
     The format of txt file is f, Z', -Z". """
     df["-Z\", Om·cm"] = df["Z\", Om·cm"] * (-1)
     df.to_csv(f'{dir_name}/{file_name}', columns=['f', 'Z\', Om·cm', "-Z\", Om·cm"], sep=' ', index=False, header=None)
 
 
-def export_data_as_txt(df, dir_name, file_name):
+def export_data_as_txt(df, dir_name: str, file_name: str):
     """Make a directory and export data as txt files
     with the electrophysical values for further plotting processing."""
     df.to_csv(f'{dir_name}/{file_name}', columns=['f', 'Z\', Om·cm', "Z\", Om·cm", 'logf', 'ω', 'Cu', 'φ', 'σu',
@@ -97,9 +97,9 @@ def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
         for name in args:
             Path(name).mkdir(exist_ok=True)
             print(f'{name} directory has been created')
+
     if not (all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx')):
         return create_dirs(*dict_of_dirs.keys())
-
     user_answer = input('Do yoy want to overwrite all files? Type Yes/No: ')
     if user_answer in ('Yes', 'yes'):
         print('Warning!!! All existed files will be rewritten now...')
