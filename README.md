@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to Impedance_data_processing 👋</h1>
+<h1 align="center">Welcome to impedance_data_processing 👋</h1>
 <p>
   <a href="https://twitter.com/AlekseiKrasnov4" target="_blank">
     <img alt="Twitter: AlekseiKrasnov4" src="https://img.shields.io/twitter/follow/AlekseiKrasnov4.svg?style=social" />
@@ -34,7 +34,7 @@ Then program will read and process data from the csv files. After calculation pr
 
 ## Questions, bug reports, feature requests
 
-Please use the Github [issue tracker](https://github.com/alexey-krasnov/Impedance_data_processing/issues/) for any questions, feature requests or bug reports.
+Please use the Github [issue tracker](https://github.com/alexey-krasnov/impedance_data_processing/issues/) for any questions, feature requests or bug reports.
 
 ## Author
 
