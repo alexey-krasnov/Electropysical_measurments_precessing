@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 # Vacuum permittivity
-E_0 = 8.854 * (10**-12)
+E_0 = 8.854 * (10 ** -12)
 
 
 def get_user_input() -> tuple:
@@ -100,6 +100,7 @@ def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
 
     if not (all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx')):
         return create_dirs(*dict_of_dirs.keys())
+
     user_answer = input('Do yoy want to overwrite all files? Type Yes/No: ')
     if user_answer in ('Yes', 'yes'):
         print('Warning!!! All existed files will be rewritten now...')
