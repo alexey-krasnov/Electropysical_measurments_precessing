@@ -97,7 +97,6 @@ def check_dirs_existence(dict_of_dirs: dict, work_dir: str):
         for name in args:
             Path(name).mkdir(exist_ok=True)
             print(f'{name} directory has been created')
-
     if not (all(dict_of_dirs.values()) and glob.glob(f'{work_dir}*.xlsx')):
         return create_dirs(*dict_of_dirs.keys())
 
